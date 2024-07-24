@@ -1,0 +1,120 @@
+﻿@using OnlineShop.Models;
+@model IEnumerable<Products>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<br />
+<br />
+
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info">Product List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a asp-action="CreateOrEdit" class="btn btn-info" style="float: right;"><i class="fas fa-plus"></i>&nbsp; Add New Product</a>
+    </div>
+</div>
+
+<br />
+
+<form method="post">
+    <div class="row">
+        <div class="col-3">
+            <input type="number" class="form-control" name="lowAmount" placeholder="Low Amount" />
+        </div>
+        <div class="col-3">
+            <input type="number" class="form-control" name="largeAmount" placeholder="High Amount" />
+        </div>
+        <div class="col-3">
+            <input type="submit" value="Search" class="btn btn-success" />
+        </div>
+    </div>
+</form>
+
+<br />
+
+<div>
+    <table class="table table-striped border" id="myTable">
+        <thead>
+            <tr class="table-info">
+                <th>
+                    @Html.DisplayNameFor(c => c.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.ProductColor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.IsAvailable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.ProductTypeId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(c => c.SpecialTagId)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.ProductColor</td>
+                    <td>@item.IsAvailable</td>
+                    <td>@item.ProductTypes.ProductType</td>
+                    <td>@item.SpecialTag.Name</td>
+                    <td style="width: 150px;">
+                        <div class="btn-group">
+                            <a asp-action="CreateOrEdit" class="btn btn-primary" asp-route-id="@item.Id">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a asp-action="Details" class="btn btn-success" asp-route-id="@item.Id">
+                                <i class="fas fa-list-ul"></i>
+                            </a>
+                            <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+    <script type="text/javascript">
+        new DataTable('#myTable', {
+            layout: {
+                topStart: {
+                    buttons: ['copy', 'excel', 'pdf', 'colvis']
+                }
+            }
+        });
+
+        $(function () {
+            var save = '@TempData["save"]'
+            if (save != '') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if (edit != '') {
+                alertify.success(edit);
+            }
+            var del = '@TempData["delete"]'
+            if (del != '') {
+                alertify.error(del);
+            }
+        })
+    </script>
+}

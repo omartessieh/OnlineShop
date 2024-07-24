@@ -1,0 +1,55 @@
+﻿@model OnlineShop.Models.ProductTypes
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Create Product Type" : "Edit Product Type";
+    bool isEdit = Model.Id > 0;
+}
+
+<h2 class="text-info">@ViewData["Title"]</h2>
+
+<form asp-action="CreateOrEdit" method="post">
+    <div class="p-4 rounded border">
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="ProductType"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="ProductType" class="form-control" />
+            </div>
+            <div class="col-5">
+                <span asp-validation-for="ProductType" class="text-danger"></span>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="@(Model.Id == 0 ? "Create" : "Update")" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+            var err = '@TempData["err"]'
+            if (err != '') {
+                alertify.error(err);
+            }
+        })
+    </script>
+}

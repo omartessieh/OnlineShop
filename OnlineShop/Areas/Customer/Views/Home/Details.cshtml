@@ -1,0 +1,160 @@
+﻿@model OnlineShop.Models.Products
+
+@using Microsoft.AspNetCore.Identity
+@using OnlineShop.Utility
+@using Microsoft.AspNetCore.Http
+@using System.Net.Http
+@using System.Threading.Tasks
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string userRole = null;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user != null)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            userRole = roles.FirstOrDefault();
+        }
+    }
+}
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@using OnlineShop.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    List<Products> products = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
+    Products product = null;
+    if (products != null)
+    {
+        product = products.FirstOrDefault(c => c.Id == Model.Id);
+    }
+}
+
+<br />
+
+<h2 class="text-info">Product Details</h2>
+
+<form asp-action="Details" method="post" enctype="multipart/form-data">
+    <div class="p-4 rounded border row">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input type="hidden" asp-for="Id" />
+                    <input asp-for="Name" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Price"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Price" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductColor"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductColor" readonly="readonly" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="ProductColor" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label>Product Type</label>
+                </div>
+                <div class="col-8">
+                    <input type="text" value="@Model.ProductTypes?.ProductType" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="ProductTypeId" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label>Special Tag</label>
+                </div>
+                <div class="col-8">
+                    <input type="text" value="@Model.SpecialTag?.Name" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="SpecialTagId" class="text-danger"></span>
+            </div>
+
+            @if (userRole == "User" && Model.IsAvailable)
+            {
+                <br />
+
+                <div class="form-group row">
+                    <div class="col-4">
+                    </div>
+                    <div class="col-8">
+                        @if (product != null)
+                        {
+                            <button type="submit" class="btn btn-danger form-control" asp-action="Remove" asp-route-id="@Model.Id">Remove to Cart</button>
+                        }
+                        else
+                        {
+                            <input type="submit" class="btn btn-info form-control" value="Add to Cart" />
+                        }
+                    </div>
+                </div>
+            }
+
+            <br />
+
+            <div class="form-group">
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+            </div>
+        </div>
+
+        <div class="col-1"></div>
+
+        <div class="col-3">
+            <img src="~/@Model.Image" width="100%" height="250px" style="border-radius: 5px;border: 1px solid #efefef;margin-bottom: 15px;" />
+            <br />
+            @if (Model.IsAvailable)
+            {
+                <img src="~/Images/instock-logo.png" width="290px" height="60px" />
+            }
+            else
+            {
+                <img src="~/Images/notinstock.jpg" width="290px" height="60px" />
+            }
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

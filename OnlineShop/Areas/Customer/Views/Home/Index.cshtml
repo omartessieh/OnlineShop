@@ -1,0 +1,70 @@
+﻿@using OnlineShop.Models;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model IPagedList<Products>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<br />
+<br />
+
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-12 col-md-4 col-sm-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">
+                        <label style="font-size: 23px;color: steelblue">@product.Name</label>
+                    </h4>
+                </div>
+                <img src="~/@product.Image" alt="Card Image" class="card-img-top" style="height: 300px;" />
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <label style="font-size: 20px;color: #a51313"><b>Price : @product.Price</b></label>
+                        </div>
+                        <a asp-action="Details" asp-controller="Home" asp-route-id="@product.Id" class="btn btn-info pull-right" style="color: white;">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                 new PagedListRenderOptions
+        {
+            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+            DisplayLinkToIndividualPages = true,
+            DisplayPageCountAndCurrentLocation = false,
+            MaximumPageNumbersToDisplay = 5,
+            UlElementClasses = new[] { "pagination justify-content-center" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+        })
+    </div>
+</div>
+
+<style>
+    .pagination .page-item.active .page-link {
+        background-color: steelblue;
+        border-color: steelblue;
+    }
+
+    .pagination .page-link {
+        color: steelblue;
+    }
+
+        .pagination .page-link:hover {
+            color: #0056b3;
+        }
+</style>

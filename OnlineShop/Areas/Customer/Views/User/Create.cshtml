@@ -1,0 +1,107 @@
+﻿@model OnlineShop.DTO.RegistrationModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<br />
+
+<h2 class="text-info">Add New User</h2>
+
+<form asp-action="Create" method="post" id="user-form" enctype="multipart/form-data">
+    <div class="p-4 rounded border">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <h3>@ViewBag.message</h3>
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Email"></label>
+            </div>
+            <div class="col-5">
+                <input type="email" asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Password"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Password" class="form-control" type="Password" placeholder="Enter your password" />
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="PasswordConfirm"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="PasswordConfirm" class="form-control" type="Password" placeholder="Enter your password" />
+            </div>
+            <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="First_Name"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="First_Name" class="form-control" placeholder="First Name" />
+            </div>
+            <span asp-validation-for="First_Name" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Last_Name"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Last_Name" class="form-control" placeholder="Last Name" />
+            </div>
+            <span asp-validation-for="Last_Name" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Save" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $("#user-form").validate({
+                rules: {
+                    Email: {
+                        required: true,
+                    },
+                    Password: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    Email: "Enter your email",
+                    Password: "Enter your password"
+                }
+            });
+        });
+    </script>
+}

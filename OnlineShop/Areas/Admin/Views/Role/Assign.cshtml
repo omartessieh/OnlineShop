@@ -1,0 +1,88 @@
+﻿    @model OnlineShop.Areas.Admin.Models.RoleUserVm
+
+@{
+    ViewData["Title"] = "Assign";
+}
+
+<br />
+
+<h2 class="text-info">Assign Role</h2>
+
+<form asp-action="Assign" method="post" enctype="multipart/form-data">
+    <div class="p-4 rounded border">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="UserId"></label>
+            </div>
+            <div class="col-5">
+                <select asp-for="UserId" asp-items="ViewBag.UserId" class="form-control"></select>
+            </div>
+            <span asp-validation-for="UserId" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RoleId"></label>
+            </div>
+            <div class="col-5">
+                <select asp-for="RoleId" asp-items="ViewBag.RoleId" class="form-control"></select>
+            </div>
+            <span asp-validation-for="RoleId" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Assign" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
+<br />
+
+<h2 class="text-info">Assigned User Roles</h2>
+
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                User Name
+            </th>
+            <th>Role Name</th>
+        </tr>
+        @foreach (var item in ViewBag.UserRoles)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.RoleName</td>
+            </tr>
+        }
+    </table>
+</div>
+
+@section Scripts {
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(function () {
+            var save = '@TempData["save"]'
+            if (save != '') {
+                alertify.success(save);
+            }
+            var err = '@TempData["err"]'
+            if (err != '') {
+                alertify.error(err);
+            }
+        })
+    </script>
+}
